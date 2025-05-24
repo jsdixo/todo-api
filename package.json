@@ -4,6 +4,7 @@
   "lint": "jshint .",
   "main": "index.js",
   "scripts": {
+    "audit": "npm audit --audit-level=moderate",
     "test": "mocha",
     "lint": "jshint ."
   },
