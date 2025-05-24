@@ -5,14 +5,14 @@ pipeline {
     stage('Build') {
       steps {
         echo 'Building the app...'
-        bt 'npm install'
+        bat 'npm install'
       }
     }
 
     stage('Test') {
       steps {
         echo 'Running tests...'
-        bt 'npm test'
+        bat 'npm test'
       }
     }
   }
