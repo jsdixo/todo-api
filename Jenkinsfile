@@ -27,6 +27,14 @@ stage('Security') {
     bat 'npm run audit'
   }
 }
+stage('Deploy') {
+  steps {
+    echo 'Deploying Docker container...'
+    bat 'docker rm -f todo-api-container || true'
+    bat 'docker build -t todo-api .'
+    bat 'docker run -d -p 3000:3000 --name todo-api-container todo-api'
+  }
+}
 
   }
 }
