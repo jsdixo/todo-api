@@ -5,15 +5,22 @@ pipeline {
     stage('Build') {
       steps {
         echo 'Building the app...'
-        sh 'npm install'
+        bat 'npm install'
       }
     }
 
     stage('Test') {
       steps {
         echo 'Running tests...'
-        sh 'npm test'
+        bat 'npm test'
       }
     }
+    stage('Code Quality') {
+  steps {
+    echo 'Running JSHint for code quality analysis...'
+    bat 'npm run lint'
+  }
+}
+
   }
 }
