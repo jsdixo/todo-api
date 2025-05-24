@@ -21,6 +21,12 @@ pipeline {
     bat 'npm run lint'
   }
 }
+stage('Security') {
+  steps {
+    echo 'Running npm audit for security analysis...'
+    bat 'npm run audit'
+  }
+}
 
   }
 }
