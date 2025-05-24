@@ -15,5 +15,12 @@ pipeline {
         bat 'npm test'
       }
     }
+    stage('Code Quality') {
+  steps {
+    echo 'Running JSHint for code quality analysis...'
+    bat 'npm run lint'
+  }
+}
+
   }
 }
