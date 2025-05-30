@@ -1,40 +1,42 @@
-const request = require('supertest');
-const app = require('../index'); // Adjust path as needed
+const express = require('express');
+const app = express();
+const port = 3000;
 
-describe('To-Do API', () => {
-  it('should GET all todos', async () => {
-    const res = await request(app).get('/todos');
-    expect(res.statusCode).toEqual(200);
-    expect(Array.isArray(res.body)).toBe(true);
-  });
+app.use(express.json());
 
-  it('should POST a new todo', async () => {
-    const res = await request(app)
-      .post('/todos')
-      .send({ id: 1, task: 'Test task' });
-    expect(res.statusCode).toEqual(201);
-    expect(res.body.task).toBe('Test task');
-  });
+let todos = [];
 
-  it('should PUT (update) a todo', async () => {
-    // First, create a todo
-    await request(app).post('/todos').send({ id: 2, task: 'Initial task' });
-
-    // Then update it
-    const res = await request(app)
-      .put('/todos/2')
-      .send({ id: 2, task: 'Updated task' });
-
-    expect(res.statusCode).toEqual(200);
-    expect(res.body.task).toBe('Updated task');
-  });
-
-  it('should DELETE a todo', async () => {
-    // First, create a todo
-    await request(app).post('/todos').send({ id: 3, task: 'To delete' });
-
-    // Then delete it
-    const res = await request(app).delete('/todos/3');
-    expect(res.statusCode).toEqual(204);
-  });
+app.get('/todos', (req, res) => {
+  res.json(todos);
 });
+
+app.post('/todos', (req, res) => {
+  const todo = req.body;
+  todos.push(todo);
+  res.status(201).json(todo);
+});
+
+app.put('/todos/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = todos.findIndex(t => t.id === id);
+  if (index !== -1) {
+    todos[index] = req.body;
+    res.json(todos[index]);
+  } else {
+    res.status(404).json({ message: 'Todo not found' });
+  }
+});
+
+app.delete('/todos/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  todos = todos.filter(t => t.id !== id);
+  res.status(204).send();
+});
+
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`To-Do API listening at http://localhost:${port}`);
+  });
+} else {
+  module.exports = app;
+}
